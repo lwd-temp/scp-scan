@@ -145,7 +145,7 @@ class WD {
         revision_id: lock.page_revision_id||null,
         }, params));
     } catch(e) {
-        winston.error(e);
+        winston.error(`${e}`);
         winston.info(`Removing edit lock...`);
         ans = await this.action('WikiPageAction', Object.assign({
             event: 'removePageEditLock',

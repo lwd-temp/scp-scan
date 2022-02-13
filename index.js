@@ -2,6 +2,8 @@ const got = require('got');
 const cheerio = require('cheerio');
 const winston = require('winston');
 const WD = require('./wikidot.js');
+const config = require('./config.json')
+
 var wd = new WD('scp-wiki-cn');
 
 const logFormat = winston.format(info => {
@@ -38,6 +40,8 @@ process.on('rejectionHandled', promise => {
 });
 
 winston.level = 'info';
+var offset=0;
+var pages = [];
 
 const getInfo = async (params) => {
     let ans = [];
@@ -45,6 +49,7 @@ const getInfo = async (params) => {
       category: "-admin -system -archived -author -ci -credit -deleted -forum -nav -old -poll -protected -random -ratemod -search -template",
       order: "created_at desc desc",
       perPage: "250",
+      offset: `${offset}`,
       separate: "false",
       module_body: `[[head]]
       [[table class="wiki-content-table"]]
@@ -76,11 +81,15 @@ const getInfo = async (params) => {
 }
 
 (async()=>{
-    await wd.login('username','password');
+    await wd.login(config.username,config.password);
     winston.info(`Logined`)
-    let pages=await getInfo();
+    for(;offset<20000; offset+=250){
+        let tmp = await getInfo();
+        pages=pages+tmp;
+    }
+    // let pages=await getInfo();
     winston.info(`Got pages ${pages.length}`);
-    for(let i=0; i<pages.length; i++){
+    for(let i=96; i<pages.length; i++){
         let source = await wd.source(pages[i].fullname);
         source = source.body.replace(/^\s*\<h1\>.*\<\/h1\>\s*<div class\=\"page\-source\"\>\s*/,'')
                             .replace(/\s*\<\/div\>\s*$/, '')
