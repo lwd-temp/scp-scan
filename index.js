@@ -89,7 +89,7 @@ const getInfo = async (params) => {
     }
     // let pages=await getInfo();
     winston.info(`Got pages ${pages.length}`);
-    for(let i=96; i<pages.length; i++){
+    for(let i=0; i<pages.length; i++){
         let source = await wd.source(pages[i].fullname);
         source = source.body.replace(/^\s*\<h1\>.*\<\/h1\>\s*<div class\=\"page\-source\"\>\s*/,'')
                             .replace(/\s*\<\/div\>\s*$/, '')
