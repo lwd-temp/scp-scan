@@ -1,0 +1,26 @@
+{
+  "name": "scp-scan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuuki410/scp-scan.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/yuuki410/scp-scan/issues"
+  },
+  "homepage": "https://github.com/yuuki410/scp-scan#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "fs": "^0.0.1-security",
+    "got": "^11.8.3",
+    "readline-sync": "^1.4.10",
+    "winston": "^3.6.0"
+  }
+}
