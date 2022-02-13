@@ -85,23 +85,24 @@ const getInfo = async (params) => {
         source = source.body.replace(/^\s*\<h1\>.*\<\/h1\>\s*<div class\=\"page\-source\"\>\s*/,'')
                             .replace(/\s*\<\/div\>\s*$/, '')
                             .replace(/\<\/?a(\s[a-z]+\=\".*\")*\>/g,'')
+                            .replace(/\<br(\s+\/)?\>/g, '')
                             .replace(/\&amp\;/g,'&')
                             .replace(/\&lt\;/g,'<')
                             .replace(/\&gt\;/g,'>')
                             .replace(/\&quot\;/g,'"')
-                            .replace(/\&nbsp\;/g,' ')
-                            .replace(/\<br(\s+\/)?\>/g, '');
+                            .replace(/\&nbsp\;/g,' ');
         // console.log(source)
         winston.info(`Got (${i})[${pages[i].fullname}] source`);
         source = source.replace(/https?\:\/\/(www\.)?(scp\-wiki\.net|scp\-wiki\.wikidot\.com)/gi, 'https://scp-wiki.wikidot.com')
                        .replace(/https?\:\/\/(www\.)?scp\-wiki\-cn\.wikidot\.com/gi, 'https://scp-wiki-cn.wikidot.com')
                        .replace(/\.wikidot\.com\/local\-\-/gi, '.wikidot.com/local--')
-                       .replace(/\[\[\[https\:\/\/scp\-wikidot\-com\//gi, '[[[');
+                       .replace(/\[\[\[https\:\/\/scp\-wikidot\-com\//gi, '[[[')
+                       .replace(/\[https?\:\/\/scp\-wiki\-cn\.wikidot\.com\//gi,'[/');
         try{
             await wd.edit(pages[i].fullname,{
                 title: pages[i].title,
                 source: source,
-                comments: `Edited by github.com/yuuki410/scp-scan; 若有不當之處請回退`,
+                comments: `Edited by github.com/yuuki410/scp-scan 若有不當之處請回退`,
             });
         } catch(e) {
             winston.warn(`Edit ${pages[i].title} failed: ${e}`);

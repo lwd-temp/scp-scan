@@ -135,13 +135,25 @@ class WD {
             mode: 'page',
             wiki_page: wiki_page,
             force_lock: true})
-    return await this.action('WikiPageAction', Object.assign({
-      event: 'savePage',
-      wiki_page: wiki_page,
-      lock_id: lock.lock_id,
-      lock_secret: lock.lock_secret,
-      revision_id: lock.page_revision_id||null,
-    }, params))
+    var ans;
+    try{
+        ans = await this.action('WikiPageAction', Object.assign({
+        event: 'savePage',
+        wiki_page: wiki_page,
+        lock_id: lock.lock_id,
+        lock_secret: lock.lock_secret,
+        revision_id: lock.page_revision_id||null,
+        }, params));
+    } catch(e) {
+        winston.error(e);
+        winston.info(`Removing edit lock...`);
+        ans = await this.action('WikiPageAction', Object.assign({
+            event: 'removePageEditLock',
+            wiki_page: wiki_page,
+            lock_id: lock.lock_id,
+            lock_secret: lock.lock_secret,
+            }, params));
+    }
   }
 
   async tags(wiki_page, params) {
