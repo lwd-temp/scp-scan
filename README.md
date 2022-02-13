@@ -8,8 +8,8 @@
 在程序目錄下新建`config.json`並填寫：
 ```json
 {
-    'username': '你的用戶名',
-    'password': '你的密碼'
+    "username": "你的用戶名",
+    "password": "你的密碼"
 }
 ```
 
