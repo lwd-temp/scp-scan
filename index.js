@@ -83,23 +83,25 @@ const getInfo = async (params) => {
 (async()=>{
     await wd.login(config.username,config.password);
     winston.info(`Logined`)
-    for(;offset<20000; offset+=250){
+    for(offset=0; offset<5000; offset+=250){
         let tmp = await getInfo();
-        pages=pages+tmp;
+        pages=pages.concat(tmp);
     }
     // let pages=await getInfo();
     winston.info(`Got pages ${pages.length}`);
     for(let i=0; i<pages.length; i++){
         let source = await wd.source(pages[i].fullname);
-        source = source.body.replace(/^\s*\<h1\>.*\<\/h1\>\s*<div class\=\"page\-source\"\>\s*/,'')
-                            .replace(/\s*\<\/div\>\s*$/, '')
-                            .replace(/\<\/?a(\s[a-z]+\=\".*\")*\>/g,'')
-                            .replace(/\<br(\s+\/)?\>/g, '')
-                            .replace(/\&amp\;/g,'&')
-                            .replace(/\&lt\;/g,'<')
-                            .replace(/\&gt\;/g,'>')
-                            .replace(/\&quot\;/g,'"')
-                            .replace(/\&nbsp\;/g,' ');
+        let $ = cheerio.load(source.body);
+        source = $('div').text().trim();
+        // source = source.body.replace(/^\s*\<h1\>.*\<\/h1\>\s*<div class\=\"page\-source\"\>\s*/,'')
+        //                     .replace(/\s*\<\/div\>\s*$/, '')
+        //                     .replace(/\<\/?a(\s[a-z]+\=\".*\")*\>/g,'')
+        //                     .replace(/\<br(\s+\/)?\>/g, '')
+        //                     .replace(/\&amp\;/g,'&')
+        //                     .replace(/\&lt\;/g,'<')
+        //                     .replace(/\&gt\;/g,'>')
+        //                     .replace(/\&quot\;/g,'"')
+        //                     .replace(/\&nbsp\;/g,' ');
         // console.log(source)
         winston.info(`Got (${i})[${pages[i].fullname}] source`);
         source = source.replace(/https?\:\/\/(www\.)?(scp\-wiki\.net|scp\-wiki\.wikidot\.com)/gi, 'https://scp-wiki.wikidot.com')
